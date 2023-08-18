@@ -1,0 +1,176 @@
+dish,quantity,measurement,ingredient,servings,proportion,grams,grams per serving,grams less than 10,total grams,grams more than 10,normalised ingredient,sustainability_score,Vegetarian,Pescetarian
+SaladRoll,2,ounces,rice vermicelli,8,2.2195121951219514,56.7,7.0875,yes,15.73079268292683,yes,rice noodles,21.55118597560976,N,N
+SaladRoll,8,rice wrapper,rice wrappers (8.5 inch diameter),8,2.2195121951219514,102.4,12.8,yes,28.40975609756098,yes,rice paper,0.0,N,N
+SaladRoll,8,large shrimp,"large cooked shrimp - peeled, deveined and cut in half",8,2.2195121951219514,280.0,35.0,yes,77.6829268292683,yes,shrimp,1378.8719512195123,N,N
+SaladRoll,3,tablespoons,chopped fresh mint leaves,8,2.2195121951219514,42.525000000000006,5.315625000000001,yes,11.798094512195124,yes,mint,13.331846798780491,N,N
+SaladRoll,3,tablespoons,chopped fresh cilantro,8,2.2195121951219514,42.525000000000006,5.315625000000001,yes,11.798094512195124,yes,coriander,13.331846798780491,N,N
+SaladRoll,0.25,cup,water,8,2.2195121951219514,60.0,7.5,yes,16.646341463414636,yes,water,0.003329268292682927,N,N
+SaladRoll,3,tablespoons,hoisin sauce,8,2.2195121951219514,42.525000000000006,5.315625000000001,yes,11.798094512195124,yes,hoisin,2.5955807926829273,N,N
+EggRolls,1,pound,ground pork,8,1.437125748502994,453.6,56.7,yes,81.48502994011976,yes,pork,540.245748502994,N,N
+EggRolls,2,cups,shredded cabbage,8,1.437125748502994,480.0,60.0,yes,86.22754491017965,yes,cabbage,53.461077844311376,N,N
+EggRolls,2,ounces,shredded carrots,8,1.437125748502994,56.7,7.0875,yes,10.18562874251497,yes,carrot,11.509760479041915,N,N
+EggRolls,1,carrot,"quart peanut oil for frying, or as needed",8,1.437125748502994,60.0,7.5,yes,10.778443113772456,yes,peanut oil,39.23353293413174,N,N
+EggRolls,8,egg roll wrapper,(7 inch square) egg roll wrappers,8,1.437125748502994,200.0,25.0,yes,35.92814371257485,yes,egg roll,0.0,N,N
+ShrimpCake,1,pound,"frozen medium shrimp - thawed, shelled, and deveined",4,5.5,453.6,113.4,yes,623.7,yes,shrimp,11070.675,N,Y
+ShrimpCake,1,carrot,"small carrot, peeled",4,5.5,60.0,15.0,yes,82.5,yes,carrot,93.225,N,Y
+ShrimpCake,3,tablespoons,"finely chopped cilantro, or more to taste",4,5.5,42.525000000000006,10.631250000000001,yes,58.47187500000001,yes,coriander,66.07321875000001,N,Y
+ShrimpCake,1,egg,large egg white,4,5.5,44.0,11.0,yes,60.5,yes,egg,272.855,N,Y
+ShrimpCake,2,tablespoons,"cooking oil, or as needed",4,5.5,28.35,7.0875,yes,38.98125,yes,oil,124.74,N,Y
+FriedCalamari,1,cup,all-purpose flour,4,0.35150375939849626,240.0,60.0,yes,21.090225563909776,yes,flour,18.770300751879702,N,Y
+FriedCalamari,6,cups,vegetable oil for frying,4,0.35150375939849626,1440.0,360.0,yes,126.54135338345866,yes,oil,404.9323308270677,N,Y
+FriedCalamari,12,ounces,"frozen calamari rings, thawed and drained",4,0.35150375939849626,340.20000000000005,85.05000000000001,yes,29.89539473684211,yes,squid,90.882,N,Y
+FriedShrimpBall,1,pound,"uncooked medium shrimp, peeled and deveined",8,1.5757575757575757,453.6,56.7,yes,89.34545454545454,yes,shrimp,1585.8818181818183,N,Y
+FriedShrimpBall,1.5,cups,fine bread crumbs,8,1.5757575757575757,360.0,45.0,yes,70.9090909090909,yes,bread crumbs,85.8,N,Y
+FriedShrimpBall,2,egg,"large eggs, beaten",8,1.5757575757575757,88.0,11.0,yes,17.333333333333332,yes,egg,78.17333333333333,N,Y
+FriedShrimpBall,0.5,cup,"vegetable oil for frying, or as needed",8,1.5757575757575757,120.0,15.0,yes,23.636363636363637,yes,oil,75.63636363636364,N,Y
+FishCake,1,pound,"boneless fish fillets, cubed",8,0.8963414634146342,453.6,56.7,yes,50.82256097560976,yes,cod,163.14042073170734,N,Y
+FishCake,0.5,cup,all-purpose flour,8,0.8963414634146342,120.0,15.0,yes,13.445121951219512,yes,flour,11.966158536585366,N,Y
+HerbChicken,5,ounces,"(5 ounce) skinless, boneless chicken breast halves",2,1.4188679245283018,141.75,70.875,yes,100.56226415094339,yes,chicken,473.64826415094336,N,N
+HerbChicken,1,lemon,"medium lemon, juiced, divided",2,1.4188679245283018,70.0,35.0,yes,49.660377358490564,yes,lemon,94.35471698113207,N,N
+HerbChicken,1,tablespoon,olive oil,2,1.4188679245283018,14.175,7.0875,yes,10.05622641509434,yes,olive oil,25.442252830188682,N,N
+GrilledShrimp,2,pounds,"large shrimp, peeled and deveined",6,0.7621951219512195,907.2,151.20000000000002,yes,115.24390243902441,yes,shrimp,2045.5792682926833,N,Y
+GrilledShrimp,8,lemon,"wedges lemon, for garnish",6,0.7621951219512195,560.0,93.33333333333333,yes,71.13821138211382,yes,lemon,135.16260162601625,N,Y
+ShrimpDumpling,1,cup,frozen shelled edamame (green soybeans),6,0.9646302250803859,240.0,40.0,yes,38.58520900321543,yes,edamame,77.17041800643086,N,Y
+ShrimpDumpling,0.33333334326744,pound,"large shrimp - peeled, deveined, and cut into 1/3-inch pieces",6,0.9646302250803859,151.2000045061108,25.200000751018464,yes,24.308682396480833,yes,shrimp,431.47911253753483,N,Y
+ShrimpDumpling,0.5,cup,finely chopped bok choy,6,0.9646302250803859,120.0,20.0,yes,19.292604501607716,yes,bok choy,0.0,N,Y
+ShrimpDumpling,36,dumpling wrapper,dumpling wrappers,6,0.9646302250803859,432.0,72.0,yes,69.45337620578778,yes,dumpling wrapper,0.0,N,Y
+ShrimpDumpling,1,cup,"water, divided",6,0.9646302250803859,240.0,40.0,yes,38.58520900321543,yes,water,0.0077170418006430866,N,Y
+ShrimpDumpling,0.5,cup,low-sodium soy sauce,6,0.9646302250803859,120.0,20.0,yes,19.292604501607716,yes,soy sauce,4.244372990353697,N,Y
+CrispyCrab,8,ounces,"(8 ounce) packages cream cheese, softened",10,1.3842239185750635,226.8,22.68,yes,31.39419847328244,yes,cream cheese,202.1786381679389,N,Y
+CrispyCrab,1,pound,"crabmeat, shredded",10,1.3842239185750635,453.6,45.36,yes,62.78839694656488,yes,crab,737.7636641221375,N,Y
+CrispyCrab,14,ounces,(14 ounce) package small won ton wrappers,10,1.3842239185750635,396.90000000000003,39.690000000000005,yes,54.93984732824428,yes,dumpling wrapper,0.0,N,Y
+CrispyCrab,1,quart,quart oil for frying,10,1.3842239185750635,1130.0,113.0,yes,156.41730279898218,yes,oil,500.53536895674296,N,Y
+MiangKham,0.33333334326744,cup,unsweetened shredded dried coconut,8,1.2444444444444445,80.0000023841856,10.0000002980232,yes,12.44444481531776,yes,coconut,9.83111140410103,N,N
+MiangKham,0.5,cup,packed dark brown sugar,8,1.2444444444444445,120.0,15.0,yes,18.666666666666668,yes,sugar,12.32,N,N
+MiangKham,0.66666668653488,cup,water,8,1.2444444444444445,160.0000047683712,20.0000005960464,yes,24.88888963063552,yes,water,0.004977777926127105,N,N
+MiangKham,1,cup,cubed cooked chicken,8,1.2444444444444445,240.0,30.0,yes,37.333333333333336,yes,chicken,175.84,N,N
+MiangKham,0.5,cup,toasted unsweetened coconut flakes,8,1.2444444444444445,120.0,15.0,yes,18.666666666666668,yes,coconut,14.746666666666668,N,N
+MiangKham,0.33333334326744,cup,roasted peanuts,8,1.2444444444444445,80.0000023841856,10.0000002980232,yes,12.44444481531776,yes,peanuts,16.924444948832154,N,N
+MiangKham,8,lime juice,"slices lime, quartered",8,1.2444444444444445,120.0,15.0,yes,18.666666666666668,yes,lime,35.46666666666667,N,N
+MiangKham,0.33333334326744,cup,diced shallot,8,1.2444444444444445,80.0000023841856,10.0000002980232,yes,12.44444481531776,yes,shallot,13.06666705608365,N,N
+MiangKham,0.33333334326744,cup,diced fresh ginger,8,1.2444444444444445,80.0000023841856,10.0000002980232,yes,12.44444481531776,yes,ginger,5.600000166892993,N,N
+GlassNoodlesSoup,1,pound,lb Ground Chicken or Pork (For chicken using both dark and white meat for more flavor.),6,1.1070110701107012,453.6,75.60000000000001,no,83.69003690036902,yes,pork,554.8649446494467,N,N
+GlassNoodlesSoup,1/2,tofu,Package of soft tofu (cubed),6,1.1070110701107012,140.0,23.333333333333332,no,25.830258302583026,yes,tofu,48.04428044280443,N,N
+GlassNoodlesSoup,4,oz,"Bean Thread Noodles (Also known as glass, mung bean or vermicelli. Soaked in water for 15 min to soften)",6,1.1070110701107012,113.4,18.900000000000002,no,20.922509225092256,yes,rice noodles,28.66383763837639,N,N
+TomJuedMooSap,680,grams,/ 1.5 pounds Pork Spare Ribs (I used a combination of pork spare ribs and front spare ribs) – cleaned and rinsed,4,0.16129032258064516,680.0,170.0,no,27.419354838709676,yes,pork,181.79032258064515,N,N
+TomJuedMooSap,9,cups,/ 4.5 liquid pints Water,4,0.16129032258064516,2160.0,540.0,no,87.09677419354838,yes,water,0.017419354838709676,N,N
+TomJuedMooSap,10,chilli pepper,"Bird’s Eye Red Chilies (or use any other small hot red chilies), to taste – roughly chopped",4,0.16129032258064516,250.0,62.5,no,10.080645161290322,yes,chilli,20.362903225806452,N,N
+TomYumKung,0.5,pound,"medium shrimp - peeled, deveined and shells reserved",5,3.634920634920635,226.8,45.36,no,164.88,yes,shrimp,2926.62,N,Y
+TomYumKung,4,cups,water,5,3.634920634920635,960.0,192.0,no,697.9047619047619,yes,water,0.1395809523809524,N,Y
+TomYumKung,4,chilli pepper,chile padi (bird's eye chiles),5,3.634920634920635,100.0,20.0,no,72.6984126984127,yes,chilli,146.85079365079363,N,Y
+TomYumKung,1.5,tablespoons,fish sauce,5,3.634920634920635,21.262500000000003,4.2525,no,15.457500000000001,yes,fish sauce,3.4006500000000006,N,Y
+TomYumKung,1.5,lime juice,"limes, juiced",5,3.634920634920635,22.5,4.5,no,16.357142857142858,yes,lime,31.078571428571433,N,Y
+TomYumKung,1,tablespoon,tom yum soup paste,5,3.634920634920635,14.175,2.835,no,10.305,yes,paste,2.2670999999999997,N,Y
+TomYumKung,12,button mushroom,"fresh button mushrooms, halved",5,3.634920634920635,240.0,48.0,no,174.47619047619048,yes,mushrooms,244.26666666666668,N,Y
+TomYumKung,6,ounces,"(6 ounce) can whole straw mushrooms, drained",5,3.634920634920635,170.10000000000002,34.02,no,123.66000000000001,yes,mushrooms,173.12400000000002,N,Y
+TomKhaGai,3,cups,chicken broth,6,1.0818181818181818,720.0,120.0,no,129.8181818181818,yes,chicken stock,28.56,N,N
+TomKhaGai,14,ounces,(14 ounce) can coconut milk,6,1.0818181818181818,396.90000000000003,66.15,no,71.56227272727273,yes,coconut milk,56.534195454545454,N,N
+TomKhaGai,0.25,cup,sweet red chile sauce,6,1.0818181818181818,60.0,10.0,no,10.818181818181818,yes,chilli sauce,2.38,N,N
+TomKhaGai,1.5,pounds,"skinless, boneless chicken breast halves - cut into strips",6,1.0818181818181818,680.4000000000001,113.40000000000002,no,122.67818181818184,yes,chicken,577.8142363636365,N,N
+TomKhaGai,15,ounces,(15 ounce) can straw mushrooms,6,1.0818181818181818,425.25,70.875,no,76.67386363636363,yes,mushrooms,107.34340909090908,N,N
+TomKhaGai,1,cup,coarsely chopped onion,6,1.0818181818181818,240.0,40.0,no,43.27272727272727,yes,onion,45.43636363636364,N,N
+TomKhaGai,1,zucchini,"zucchini, sliced",6,1.0818181818181818,323.0,53.833333333333336,no,58.23787878787879,yes,aubergine,180.53742424242424,N,N
+OnionSoup,1,onion,"small onion, chopped",6,7.2,170.0,28.333333333333332,no,204.0,yes,onion,214.2,Y,Y
+OnionSoup,0.5,carrot,"carrot, chopped",6,7.2,30.0,5.0,no,36.0,yes,carrot,40.68,Y,Y
+OnionSoup,2,tablespoons,chicken stock,6,7.2,28.35,4.7250000000000005,no,34.02,yes,chicken stock,7.484400000000001,Y,Y
+OnionSoup,1,cup,chopped fresh shiitake mushrooms,6,7.2,240.0,40.0,no,288.0,yes,mushrooms,403.2,Y,Y
+OnionSoup,1,cup,"baby portobello mushrooms, sliced",6,7.2,240.0,40.0,no,288.0,yes,mushrooms,403.2,Y,Y
+OnionSoup,1,tablespoon,minced fresh chives,6,7.2,14.175,2.3625000000000003,no,17.01,yes,chives,19.2213,Y,Y
+KaiPalo,60,g,palm sugar (⅓ cup packed),4,1.0,60.0,15.0,no,15.0,yes,sugar,9.9,N,Y
+KaiPalo,5,cups,"unsalted pork or chicken stock, 4 cups if using IP",4,1.0,1200.0,300.0,no,300.0,yes,chicken stock,66.0,N,N
+KaiPalo,8,tofu puff,"tofu puffs, halved",4,1.0,160.0,40.0,no,40.0,yes,tofu,74.4,N,N
+PadThai,0.5,cup,white sugar,8,0.7851373182552503,120.0,15.0,no,11.777059773828755,yes,sugar,7.772859450726978,N,N
+PadThai,0.5,cup,distilled white vinegar,8,0.7851373182552503,120.0,15.0,no,11.777059773828755,yes,vinegar,2.590953150242326,N,N
+PadThai,12,ounces,(12 ounce) package dried rice noodles,8,0.7851373182552503,340.20000000000005,42.525000000000006,no,33.387964458804525,yes,rice noodles,45.7415113085622,N,N
+PadThai,0.5,cup,vegetable oil,8,0.7851373182552503,120.0,15.0,no,11.777059773828755,yes,oil,37.68659127625202,N,N
+PadThai,4,egg,eggs,8,0.7851373182552503,176.0,22.0,no,17.273021001615508,yes,egg,77.90132471728595,N,N
+PadThai,12,ounces,"(12 ounce) package firm tofu, cut into 1/2 inch strips",8,0.7851373182552503,340.20000000000005,42.525000000000006,no,33.387964458804525,yes,tofu,62.10161389337642,N,N
+PadThai,1.5,cups,ground peanuts,8,0.7851373182552503,360.0,45.0,no,35.33117932148627,yes,peanuts,48.05040387722133,N,N
+PadThai,0.5,cup,chopped fresh chives,8,0.7851373182552503,120.0,15.0,no,11.777059773828755,yes,chives,13.308077544426494,N,N
+PadThai,2,cups,fresh bean sprouts,8,0.7851373182552503,480.0,60.0,no,47.10823909531502,yes,bean sprouts,0.0,N,N
+PadKrapow,0.33333334326744,cup,chicken broth,2,0.5202797202797202,80.0000023841856,40.0000011920928,no,20.81118943141052,yes,chicken stock,4.578461674910314,N,N
+PadKrapow,1,pound,"skinless, boneless chicken thighs, coarsely chopped",2,0.5202797202797202,453.6,226.8,no,117.99944055944056,yes,chicken,555.777365034965,N,N
+PadKrapow,0.25,cup,sliced shallots,2,0.5202797202797202,60.0,30.0,no,15.608391608391607,yes,shallot,16.388811188811186,N,N
+PadKrapow,1,cup,very thinly sliced fresh basil leaves,2,0.5202797202797202,240.0,120.0,no,62.433566433566426,yes,basil,70.54993006993006,N,N
+PadKrapow,2,cups,hot cooked rice,2,0.5202797202797202,480.0,240.0,no,124.86713286713285,yes,rice,168.57062937062935,N,N
+HainaneseChickenRice,1,Whole chicken,whole chicken,4,0.5702005730659025,1400.0,350.0,no,199.5702005730659,yes,chicken,939.9756446991404,N,N
+HainaneseChickenRice,5,tablespoons,light soy sauce,4,0.5702005730659025,70.875,17.71875,no,10.103241404011461,yes,soy sauce,2.2227131088825214,N,N
+HainaneseChickenRice,3,cups,"uncooked rice, or more to taste",4,0.5702005730659025,720.0,180.0,no,102.63610315186246,yes,rice,138.5587392550143,N,N
+HainaneseChickenRice,5,chilli pepper,"red chile peppers, seeded and chopped",4,0.5702005730659025,125.0,31.25,no,17.818767908309454,yes,chilli,35.9939111747851,N,N
+GreenChickenCurry,1,pound,"skinless, boneless chicken breast halves - cut into 1 inch cubes",4,0.5084745762711864,453.6,113.4,no,57.66101694915254,yes,chicken,271.58338983050845,N,N
+GreenChickenCurry,2,cups,coconut milk,4,0.5084745762711864,480.0,120.0,no,61.01694915254237,yes,coconut milk,48.20338983050847,N,N
+GreenChickenCurry,0.5,cup,"cilantro leaves, for garnish",4,0.5084745762711864,120.0,30.0,no,15.254237288135592,yes,coriander,17.237288135593218,N,N
+ChickenPorridge,1,onion,"onion, diced",5,0.7755102040816326,170.0,34.0,no,26.36734693877551,yes,onion,27.685714285714283,N,N
+ChickenPorridge,2.25,pounds,"chicken wings, split and tips discarded",5,0.7755102040816326,1020.6,204.12,no,158.29714285714286,yes,chicken,745.5795428571428,N,N
+ChickenPorridge,5.25,cups,chicken broth,5,0.7755102040816326,1260.0,252.0,no,195.42857142857142,yes,chicken stock,42.994285714285716,N,N
+ChickenPorridge,1,cup,glutinous sweet rice,5,0.7755102040816326,240.0,48.0,no,37.224489795918366,yes,sticky rice,50.25306122448979,N,N
+ChickenPorridge,1,lemon,"lemon, sliced",5,0.7755102040816326,70.0,14.0,no,10.857142857142858,yes,lemon,20.62857142857143,N,N
+SausageFriedRice,1,pound,ground pork sausage,8,1.1296296296296295,453.6,56.7,no,64.05,yes,sausage,424.6515,N,N
+SausageFriedRice,5,egg,"eggs, beaten",8,1.1296296296296295,220.0,27.5,no,31.064814814814813,yes,egg,140.1023148148148,N,N
+SausageFriedRice,0.5,cabbage,"head cabbage, cored and shredded",8,1.1296296296296295,450.0,56.25,no,63.541666666666664,yes,cabbage,39.39583333333333,N,N
+SausageFriedRice,3,carrot,"carrots, chopped",8,1.1296296296296295,180.0,22.5,no,25.416666666666664,yes,carrot,28.72083333333333,N,N
+SausageFriedRice,6,cups,"cooked white rice, cold",8,1.1296296296296295,1440.0,180.0,no,203.33333333333331,yes,rice,274.49999999999994,N,N
+SausageFriedRice,14.5,ounces,"(14.5 ounce) can bean sprouts, drained",8,1.1296296296296295,411.07500000000005,51.384375000000006,no,58.0453125,yes,bean sprout,0.0,N,N
+SausageFriedRice,6,ounces,"(6 ounce) package frozen green peas, thawed",8,1.1296296296296295,170.10000000000002,21.262500000000003,no,24.01875,yes,peas,60.287062500000005,N,N
+ShrimpStickyRice,1/3,cup,honey,4,1.9233870967741933,80.0,20.0,no,38.467741935483865,yes,honey,63.85645161290322,N,Y
+ShrimpStickyRice,1/4,cup,soy sauce,4,1.9233870967741933,60.0,15.0,no,28.8508064516129,yes,soy sauce,6.347177419354838,N,Y
+ShrimpStickyRice,1,pound,raw shrimp (size medium (see note)),4,1.9233870967741933,453.6,113.4,no,218.11209677419353,yes,shrimp,3871.4897177419352,N,Y
+ShrimpStickyRice,2,spring onion (one),green onions (sliced thinly on the diagonal),4,1.9233870967741933,30.0,7.5,no,14.42540322580645,yes,spring onion,15.146673387096774,N,Y
+ShrimpFriedRice,8,ounces,"small raw shrimp, shelled and deveined",4,0.6897374701670644,226.8,56.7,no,39.10811455847256,yes,shrimp,694.169033412888,N,Y
+ShrimpFriedRice,3,egg,"large eggs, beaten",4,0.6897374701670644,132.0,33.0,no,22.761336515513126,yes,egg,102.65362768496419,N,Y
+ShrimpFriedRice,4,cups,"leftover rice, grains separated well",4,0.6897374701670644,960.0,240.0,no,165.53699284009548,yes,rice,223.47494033412892,N,Y
+ShrimpFriedRice,3/4,cup,"frozen peas and carrots, defrosted",4,0.6897374701670644,180.0,45.0,no,31.0381861575179,yes,peas,77.90584725536992,N,Y
+KanomJeenNamYa,1,cup,coconut milk,4,0.3,240.0,60.0,no,18.0,yes,coconut milk,14.22,N,Y
+KanomJeenNamYa,1,cup,water,4,0.3,240.0,60.0,no,18.0,yes,water,0.0036,N,Y
+KanomJeenNamYa,1,cup,cooked white fish (pomfret or tilapia work well),4,0.3,240.0,60.0,no,18.0,yes,cod,57.78,N,Y
+KanomJeenNamYa,10,ounces,cooked khanom jeen (or somen noodles),4,0.3,283.5,70.875,no,21.2625,yes,noodles,29.129625,N,Y
+ShrimpGlassNoodles,6,ounces,"raw shrimp, peeled and deveined, tail on or off.",6,1.935483870967742,170.10000000000002,28.350000000000005,no,54.870967741935495,yes,shrimp,973.959677419355,N,Y
+ShrimpGlassNoodles,2,oz,"dry glass noodles, soaked until soft",6,1.935483870967742,56.7,9.450000000000001,no,18.290322580645164,yes,rice noodles,25.05774193548387,N,Y
+ShrimpGlassNoodles,1/3,cup,"green onion, sliced into 1/4 inch pieces",6,1.935483870967742,80.0,13.333333333333334,no,25.806451612903228,yes,spring onion,27.09677419354839,N,Y
+ShrimpGlassNoodles,1/3,cup,"mint leaves, chopped into large pieces",6,1.935483870967742,80.0,13.333333333333334,no,25.806451612903228,yes,mint,29.161290322580648,N,Y
+ShrimpGlassNoodles,1/3,cup,"cilantro, cut into 1/2-inch pieces",6,1.935483870967742,80.0,13.333333333333334,no,25.806451612903228,yes,coriander,29.161290322580648,N,Y
+ShrimpGlassNoodles,1/3,cup,"celery stems, sliced thin",6,1.935483870967742,80.0,13.333333333333334,no,25.806451612903228,yes,celery,21.67741935483871,N,Y
+ShrimpGlassNoodles,1/2,cup,"celery leaf, sliced into 1 inch pieces",6,1.935483870967742,120.0,20.0,no,38.70967741935484,yes,celery,32.516129032258064,N,Y
+ShrimpGlassNoodles,3.5,tablespoon,fresh lime juice,6,1.935483870967742,49.612500000000004,8.26875,no,16.00403225806452,yes,lime,30.407661290322586,N,Y
+ShrimpGlassNoodles,2.5,tablespoon,fish sauce,6,1.935483870967742,35.4375,5.90625,no,11.431451612903226,yes,fish sauce,2.51491935483871,N,Y
+AmericanFriedRice,3,Tbsp,"corn kernels, frozen or canned",2,1.0,42.525000000000006,21.262500000000003,no,21.262500000000003,yes,corn,8.717625000000002,N,N
+AmericanFriedRice,2,Tbsp,raisins,2,1.0,28.35,14.175,no,14.175,yes,raisins,29.7675,N,N
+AmericanFriedRice,350,g,"cooked rice, preferably chilled (see note)",2,1.0,350.0,175.0,no,175.0,yes,rice,236.25,N,N
+AmericanFriedRice,3,Tbsp,ketchup,2,1.0,42.525000000000006,21.262500000000003,no,21.262500000000003,yes,ketchup,32.74425000000001,N,N
+AmericanFriedRice,2,egg,eggs (for making sunnyside up eggs),2,1.0,88.0,44.0,no,44.0,yes,egg,198.44,N,N
+AmericanFriedRice,4,chicken drumstick,"chicken drumsticks (drumsticks are what we always use, but feel free to use other cuts you prefer)",2,1.0,480.0,240.0,no,240.0,yes,chicken,1130.4,N,N
+AmericanFriedRice,3,Tbsp,water,2,1.0,42.525000000000006,21.262500000000003,no,21.262500000000003,yes,water,0.004252500000000001,N,N
+ChocolateCake,2,cups,white sugar,12,0.6473282442748092,480.0,40.0,no,25.893129770992367,yes,sugar,17.08946564885496,Y,Y
+ChocolateCake,1.75,cups,all-purpose flour,12,0.6473282442748092,420.0,35.0,no,22.65648854961832,yes,flour,20.164274809160304,Y,Y
+ChocolateCake,1,cup,milk,12,0.6473282442748092,240.0,20.0,no,12.946564885496183,yes,milk,22.78595419847328,Y,Y
+ChocolateCake,1,cup,boiling water,12,0.6473282442748092,240.0,20.0,no,12.946564885496183,yes,water,0.002589312977099237,Y,Y
+ChocolateCake,5.3333334922791,cups,confectioners' sugar,12,0.6473282442748092,1280.000038146984,106.666669845582,no,69.04834811378133,yes,sugar,45.571909755095675,Y,Y
+ChocolateCake,1.5,cups,unsweetened cocoa powder,12,0.6473282442748092,360.0,30.0,no,19.419847328244273,yes,cocoa powder,86.22412213740458,Y,Y
+ApplePie,8,apple,"small Granny Smith apples, or as needed",8,0.7935656836461126,560.0,70.0,no,55.54959785522788,yes,apple,49.99463806970509,Y,Y
+ApplePie,0.5,cup,unsalted butter,8,0.7935656836461126,120.0,15.0,no,11.903485254691688,yes,butter,116.17801608579087,Y,Y
+ApplePie,0.5,cup,white sugar,8,0.7935656836461126,120.0,15.0,no,11.903485254691688,yes,sugar,7.856300268096515,Y,Y
+ApplePie,0.5,cup,packed brown sugar,8,0.7935656836461126,120.0,15.0,no,11.903485254691688,yes,sugar,7.856300268096515,Y,Y
+ApplePie,1,pastry,"(9 inch) double-crust pie pastry, thawed",8,0.7935656836461126,320.0,40.0,no,31.742627345844504,yes,pastry,208.86648793565683,Y,Y
+ChocolateIcecream,1,cup,milk,8,0.9490084985835694,240.0,30.0,no,28.47025495750708,yes,milk,50.10764872521246,Y,Y
+ChocolateIcecream,0.75,cup,sugar,8,0.9490084985835694,180.0,22.5,no,21.35269121813031,yes,sugar,14.092776203966004,Y,Y
+ChocolateIcecream,3,egg,"egg yolk, lightly beaten",8,0.9490084985835694,132.0,16.5,no,15.658640226628895,yes,egg,70.62046742209631,Y,Y
+ChocolateIcecream,2,cups,heavy cream,8,0.9490084985835694,480.0,60.0,no,56.94050991501416,yes,double cream,211.81869688385268,Y,Y
+VanillaIceCream,2.25,cups,milk,4,0.7764705882352941,540.0,135.0,no,104.82352941176471,yes,milk,184.48941176470586,Y,Y
+VanillaIceCream,1,cup,heavy whipping cream,4,0.7764705882352941,240.0,60.0,no,46.588235294117645,yes,double cream,173.30823529411762,Y,Y
+VanillaIceCream,0.75,cup,white sugar,4,0.7764705882352941,180.0,45.0,no,34.94117647058824,yes,sugar,23.06117647058824,Y,Y
+MangoStickyRice,2,cups,"uncooked glutinous (sticky) white rice, rinsed",6,0.5142857142857142,480.0,80.0,no,41.14285714285714,yes,sticky rice,55.54285714285714,Y,Y
+MangoStickyRice,1,cup,white sugar,6,0.5142857142857142,240.0,40.0,no,20.57142857142857,yes,sugar,13.577142857142855,Y,Y
+LodChongThai,4.2,oz,Pine Brand tapioca starch plus extra for dusting (about 1 cup),6,0.7962962962962963,119.07000000000001,19.845000000000002,no,15.802500000000002,yes,tapioca,9.323475,Y,Y
+LodChongThai,1,cup,¼ cup coconut water or water,6,0.7962962962962963,240.0,40.0,no,31.85185185185185,yes,water,0.006370370370370371,Y,Y
+LodChongThai,1,cup,coconut milk,6,0.7962962962962963,240.0,40.0,no,31.85185185185185,yes,coconut milk,25.16296296296296,Y,Y
+Pudding,2,mango,large ripe mangoes,5,0.5042016806722689,410.0,82.0,no,41.344537815126046,yes,mango,181.9159663865546,Y,Y
+Pudding,3/4,cup,coconut milk (canned or fresh),5,0.5042016806722689,180.0,36.0,no,18.15126050420168,yes,coconut milk,14.339495798319327,Y,Y
+Pudding,1/2,cup,water,5,0.5042016806722689,120.0,24.0,no,12.100840336134453,yes,water,0.0024201680672268906,Y,Y
+KanomKrok,15,ounces,15 oz can Coconut Milk ((see note)),20,3.5294117647058822,425.25,21.2625,no,75.04411764705881,yes,coconut milk,59.28485294117646,Y,Y
+KanomKrok,15,ounces,15 oz can Coconut Milk ((see note)),20,3.5294117647058822,425.25,21.2625,no,75.04411764705881,yes,coconut milk,59.28485294117646,Y,Y
+KanomKrok,1/2,cup,Cooked Jasmine Rice ((at room temperature)),20,3.5294117647058822,120.0,6.0,no,21.176470588235293,yes,jasmine rice,28.588235294117645,Y,Y
+KanomKrok,0.25,cup,1/4 cups Rice Flour,20,3.5294117647058822,60.0,3.0,no,10.588235294117647,yes,rice flour,9.423529411764706,Y,Y
+KanomKrok,1/2,cup,Sparkling Mineral Water,20,3.5294117647058822,120.0,6.0,no,21.176470588235293,yes,water,0.0042352941176470585,Y,Y
+KhanomMawKaeng,4,egg,eggs,8,1.1090909090909091,176.0,22.0,no,24.400000000000002,yes,egg,110.04400000000001,Y,Y
+KhanomMawKaeng,1,cup,of coconut cream,8,1.1090909090909091,240.0,30.0,no,33.27272727272727,yes,coconut cream,62.22,Y,Y
+KhanomMawKaeng,1/2,cup,of palm sugar,8,1.1090909090909091,120.0,15.0,no,16.636363636363637,yes,sugar,10.98,Y,Y
