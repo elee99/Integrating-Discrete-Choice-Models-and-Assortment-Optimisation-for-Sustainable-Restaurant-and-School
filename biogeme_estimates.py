@@ -368,7 +368,6 @@ results_mains2 = the_biogeme_mains2.estimate() # estimates stay the same no matt
 results_mc2 = results_mains2.getEstimatedParameters ()
 print(results_mc2)
 """
-# Add more utility expressions for other alternatives if needed
 
 M_2 = {1: M1 , 2: M2 , 3: M3, 4: M4, 5: M5}
 av2 = {1: AV , 2: AV, 3: AV, 4: AV, 5: AV}

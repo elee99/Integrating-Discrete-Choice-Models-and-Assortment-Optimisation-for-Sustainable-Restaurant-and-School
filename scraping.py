@@ -213,16 +213,12 @@ df['Unsat_fat'] = None
 
 def insert_df(name,df,output):
     
-    # Filter the DataFrame based on the dish name
     filtered_rows = df.loc[df['Dish names'] == name]
     
-    # Retrieve the row index of the filtered row
     row_index = filtered_rows.index[0]
     
-    # Output the row index
     print(f"The row index for '{name}' is: {row_index}")
         
-    # Assign the values from the output tuple to the corresponding columns in the DataFrame
     df.loc[row_index, 'Carbs'] = output[0]
     df.loc[row_index, 'Chol (mg)'] = output[1]
     df.loc[row_index, 'Fiber'] = output[2]
@@ -308,12 +304,9 @@ def split_ingr(ingr_list):
 
 df_ingr = pd.DataFrame(columns=['dish', 'quantity', 'measurement', 'ingredient','servings'])
 
-# Process each dish and its ingredients
 for i in range(len(main_names)):
     ingredients = []  # Store the ingredients for each dish
 
-    # Process the ingredients for the current dish
-    # Assuming `ingr_list` contains the list of ingredients for each dish
     split_ingredients = split_ingr(mains_ingr[i])
     dish_name = main_names[i]
     serving_size = mains_ingr[i][1]
@@ -330,8 +323,6 @@ df_ingr_starters = pd.DataFrame(columns=['dish', 'quantity', 'measurement', 'ing
 for i in range(len(starter_names)):
     ingredients = []  # Store the ingredients for each dish
 
-    # Process the ingredients for the current dish
-    # Assuming `ingr_list` contains the list of ingredients for each dish
     split_ingredients = split_ingr(starter_ingr[i])
     dish_name = starter_names[i]
     serving_size = starter_ingr[i][1]
@@ -361,8 +352,6 @@ df_ingr_desserts = pd.DataFrame(columns=['dish', 'quantity', 'measurement', 'ing
 for i in range(len(dessert_names)):
     ingredients = []  # Store the ingredients for each dish
 
-    # Process the ingredients for the current dish
-    # Assuming `ingr_list` contains the list of ingredients for each dish
     split_ingredients = split_ingr(dessert_ingr[i])
     dish_name = dessert_names[i]
     serving_size = dessert_ingr[i][1]
@@ -376,8 +365,6 @@ df_ingr_soups = pd.DataFrame(columns=['dish', 'quantity', 'measurement', 'ingred
 for i in range(len(soup_names)):
     ingredients = []  # Store the ingredients for each dish
 
-    # Process the ingredients for the current dish
-    # Assuming `ingr_list` contains the list of ingredients for each dish
     split_ingredients = split_ingr(soup_ingr[i])
     dish_name = soup_names[i]
     serving_size = soup_ingr[i][1]
@@ -414,28 +401,23 @@ def convert_to_grams(row):
     quantity = row['quantity']
     measurement = row['measurement']
 
-    # Convert the quantity to a decimal number if it is a fraction
     try:
         quantity = float(quantity)
     except ValueError:
         try:
             quantity = float(fractions.Fraction(quantity))
         except ValueError:
-            # Invalid fraction format, set quantity to NaN (or handle it as needed)
             quantity = float('nan')
 
-    # Check if the measurement is 'None', and set grams to 'None' accordingly
     if measurement is None:
         quantity_grams = None
     elif measurement in measurements:
-        # Convert the measurement to grams based on the conversions dictionary
         quantity_grams = quantity * measurements[measurement]
     else:
         quantity_grams = quantity
 
     return quantity_grams
 
-# Add the converted measurements in grams as a new column
 df_ingr['grams'] = df_ingr.apply(convert_to_grams, axis=1)
 df_ingr['servings'] = df_ingr['servings'].str.extract('(\d+)').astype(int)
 df_ingr['grams per serving'] = df_ingr['grams'] / df_ingr['servings']
@@ -577,21 +559,17 @@ def convert_to_grams(row):
     quantity = row['quantity']
     measurement = row['measurement']
 
-    # Convert the quantity to a decimal number if it is a fraction
     try:
         quantity = float(quantity)
     except ValueError:
         try:
             quantity = float(fractions.Fraction(quantity))
         except ValueError:
-            # Invalid fraction format, set quantity to NaN (or handle it as needed)
             quantity = float('nan')
 
-    # Check if the measurement is 'None', and set grams to 'None' accordingly
     if measurement is None:
         quantity_grams = None
     elif measurement in none_ingr:
-        # Convert the measurement to grams based on the conversions dictionary
         quantity_grams = quantity * none_ingr[measurement]
     elif measurement in measurements:
         quantity_grams = quantity * measurements[measurement]
@@ -796,7 +774,6 @@ def convert_to_score(row):
     quantity = row['total grams']
 
     if ingr in scores:
-        # Convert the measurement to grams based on the conversions dictionary
         s_score = quantity * scores[ingr]/100
     
     return s_score
@@ -817,7 +794,6 @@ all_ingredients['Pescetarian'] = 'Y'
 import itertools
 combinations = list(itertools.product(starter_names, main_names, dessert_names))
 
-# Display the combinations
 for combination in combinations:
     print(combination)
 

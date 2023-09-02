@@ -23,18 +23,14 @@ from scipy.stats import gumbel_r
 from itertools import combinations_with_replacement
 from scipy.optimize import minimize
 
-# Get a list of all CSV files in the directory
 csv_files = glob.glob('menu*.csv')
 
-# Create an empty list to store dataframes
 dfs = []
 
-# Iterate over each CSV file and read it into a dataframe
 for file in csv_files:
     df = pd.read_csv(file)
     dfs.append(df)
 
-# Concatenate all dataframes into a single dataframe
 combined_df = pd.concat(dfs, ignore_index=True)
 df = combined_df
 
@@ -53,7 +49,6 @@ df[['Dessert 1', 'D1 Price', 'D1 Rating', 'D1 Calories', 'D1 Discount']
 df[['Dessert 2', 'D2 Price', 'D2 Rating', 'D2 Calories', 'D2 Discount']
    ] = df['Dessert2'].str.extract(r'([^()]+)\s*\(([^,]+),([^,]+),([^,]+),([^)]+)\)')
 
-# Drop the original column
 df.drop(columns=['Appertizer1'], inplace=True)
 df.drop(columns=['Appetizer2'], inplace=True)
 df.drop(columns=['MainCourse1'], inplace=True)
@@ -111,7 +106,6 @@ main1_dishes = {
     'GreenChickenCurry': 4,
     'ShrimpStickyRice': 5,
     'ShrimpFriedRice': 6
-    # Add more mappings for other main course choices
 }
 
 main2_dishes = {
@@ -339,13 +333,11 @@ def em_algorithm(initial_values, prev_fun, max_iter, tol, df, name, length,metho
         result = minimize(lambda theta: -objective_new(theta, h_z0, h_z1, df_0, df_1, df, length, name, lengths_0, lengths_1, epsilon, em_prob0,em_prob1), initial_values, method=method)
         
         optimized_theta = result.x
-        #objective_value = result.fun
         initial_values = optimized_theta
-        #initial_theta = optimized_theta
 
         print(f"Iteration {iteration}, Objective Value: {result.fun}")
         if prev_fun is not None and abs(prev_fun - result.fun) < tol:
-            break  # Stop the loop if the difference is smaller than the threshold
+            break  
 
         prev_fun = result.fun
         np.save('em_results', result.fun)
@@ -448,17 +440,15 @@ coeffs_list = [a1_est,a2_est,m1_est,m2_est,d1_est,d2_est,s_est]
 
 coeffs_df = pd.DataFrame(coeffs_list)
 
-# Add a column to identify the category
 coeffs_df['category'] = ['Appetizer 1','Appetizer 2','Main 1','Main 2','Dessert 1','Dessert 2','Soup']
 
-# Set the 'category' column as the index
 coeffs_df.set_index('category', inplace=True)
 
 obj_df = pd.DataFrame([a1_fun,a2_fun,m1_fun,m2_fun,d1_fun,d2_fun,s_fun])
 obj_df['Starting Values'] = [a1_vals,a2_vals,m1_vals,m2_vals,d1_vals,d2_vals,s_vals]
 obj_df['category'] = ['Appetizer 1','Appetizer 2','Main 1','Main 2','Dessert 1','Dessert 2','Soup']
 
-coeffs_df.to_csv('em_coefficients_final.csv', index=True)  # Save the DataFrame as a CSV file
+coeffs_df.to_csv('em_coefficients_final.csv', index=True) 
 obj_df.to_csv('em_obj_vals_final.csv',index=True)
 
 probs_em = pd.DataFrame([probs_test,probs_a2,probs_m1,probs_m2,probs_d1,probs_d2,probs_s])

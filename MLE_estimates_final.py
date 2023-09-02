@@ -20,18 +20,14 @@ from scipy.stats import gumbel_r
 from itertools import combinations_with_replacement
 from scipy.optimize import minimize
 
-# Get a list of all CSV files in the directory
 csv_files = glob.glob('menu*.csv')
 
-# Create an empty list to store dataframes
 dfs = []
 
-# Iterate over each CSV file and read it into a dataframe
 for file in csv_files:
     df = pd.read_csv(file)
     dfs.append(df)
 
-# Concatenate all dataframes into a single dataframe
 combined_df = pd.concat(dfs, ignore_index=True)
 df = combined_df
 
@@ -43,7 +39,6 @@ df[['Soup', 'S Price', 'S Rating', 'S Calories', 'S Discount']] = df['Soup'].str
 df[['Dessert 1', 'D1 Price', 'D1 Rating', 'D1 Calories', 'D1 Discount']] = df['Dessert1'].str.extract(r'([^()]+)\s*\(([^,]+),([^,]+),([^,]+),([^)]+)\)')
 df[['Dessert 2', 'D2 Price', 'D2 Rating', 'D2 Calories', 'D2 Discount']] = df['Dessert2'].str.extract(r'([^()]+)\s*\(([^,]+),([^,]+),([^,]+),([^)]+)\)')
 
-# Drop the original column
 df.drop(columns=['Appertizer1'], inplace=True)
 df.drop(columns=['Appetizer2'], inplace=True)
 df.drop(columns=['MainCourse1'], inplace=True)
@@ -105,7 +100,6 @@ main1_dishes = {
     'GreenChickenCurry': 4,
     'ShrimpStickyRice': 5,
     'ShrimpFriedRice':6
-    # Add more mappings for other main course choices
 }
 
 main2_dishes = {

@@ -142,6 +142,130 @@ df['D1 Choice'] = df['Dessert 1'].replace({
 
 # need to consider setting some params to 0 / probs to 1 like in paper, but do this later
 
+# asc for each item in each category 6+6+5 = 17
+# betas: 17*4
+# assoc: for those with 6 items, 6*6 + 6*5, those with 5: 5*6 + 5*6 (66 + 66 + 60)
+# 277 total
+    
+def get_coeffs(initial_coeffs):
+    num_categories = 3
+    num_items_per_category = [6, 6, 5]
+    
+    coefficients = {}
+    
+    for cat_num, num_items in enumerate(num_items_per_category, start=1):
+        for item_num in range(1, num_items + 1):
+            coeff_name = f'asc_{cat_num}{item_num}'
+            if item_num == 1:
+                coefficients[coeff_name] = 0
+            else:
+                coeff_index = (cat_num - 1) * num_items + (item_num - 2)
+                coefficients[coeff_name] = initial_coeffs[0:17][coeff_index]
+        
+    coeff_prefixes = ['b_price_', 'b_calories_', 'b_rating_', 'b_discount_']
+    
+    beta_coefficients = {}
+    
+    for cat_num, num_items in enumerate(num_items_per_category, start=1):
+        for item_num in range(1, num_items + 1):
+            for coeff_prefix in coeff_prefixes:
+                coeff_name = f'{coeff_prefix}{cat_num}{item_num}'
+                if item_num == 1:
+                    beta_coefficients[coeff_name] = 0
+                else:
+                    coeff_index = (cat_num - 1) * num_items + (item_num - 2)
+                    beta_coefficients[coeff_name] = initial_coeffs[17:85][coeff_index]
+    
+    association_coefficients = {}
+    
+    for cat_from in range(1, num_categories + 1):
+        for item_from in range(1, num_items_per_category[cat_from - 1] + 1):
+            for cat_to in range(1, num_categories + 1):
+                for item_to in range(1, num_items_per_category[cat_to - 1] + 1):
+                    coeff_name = f'assoc_{cat_from}_{cat_to}_{item_from}_{item_to}'
+                    
+                    last_number = int(str(item_to)[-1])
+                    penultimate_number = int(str(item_to)[-2]) if len(str(item_to)) > 1 else 0
+                    
+                    if last_number == 1 or penultimate_number == 1:
+                        association_coefficients[coeff_name] = 0
+                    else:
+                        coeff_index = (cat_from - 1) * sum(num_items_per_category) + \
+                                      (item_from - 1) * num_categories + \
+                                      (cat_to - 1) * num_items_per_category[cat_to - 1] + \
+                                      (item_to - 1)
+                        association_coefficients[coeff_name] = initial_coeffs[85:277][coeff_index]
+    
+    coeffs = {**coefficients, **beta_coefficients, **association_coefficients}
+    return coeffs
+
+initial_coeffs = get_coeffs([0.01]*277)
+
+def calc_probs_a1(df, coeffs, name, length, cat, c1, c2, c1_len, c2_len):
+
+    utilities_dict = {k: [] for k in range(1, length + 1)}
+    utilities = []
+    
+    df[f'{name} Calories'] = df[f'{name} Calories'].astype(float)
+    df[f'{name} Price'] = df[f'{name} Price'].astype(float)
+    df[f'{name} Rating'] = df[f'{name} Rating'].astype(float)
+    df[f'{name} Discount'] = df[f'{name} Discount'].astype(float)
+
+    for k in range(1,length+1):
+        choice_df = df.loc[df[f'{name} Choice']==k]
+        utilities.append(coeffs[f'asc_{cat}{k}'] + coeffs[f'b_price_{cat}{k}'] * choice_df[f'{name} Price'].iloc[0] + coeffs[f'b_calories_{cat}{k}'] * choice_df[f'{name} Calories'].iloc[0] + coeffs[f'b_discount_{cat}{k}'] * choice_df[f'{name} Discount'].iloc[0] + coeffs[f'b_rating_{cat}{k}'] * choice_df[f'{name} Rating'].iloc[0])
+        choice_probs = np.exp(utilities)
+        
+        for j in range(1, c1_len + 1):
+            for i in range(1, c2_len + 1):
+                utilities_dict[k].append(choice_probs + np.exp(coeffs[f'assoc_{cat}_{c1}_{k}_{j}'] + coeffs[f'assoc_{cat}_{c2}_{k}_{i}'] ))
+
+    tot_utility = 0
+    for i in range(1,length+1):
+        tot_utility += np.sum(np.sum(utilities_dict[i][j] for j in range(len(utilities_dict[1]))))
+
+    probabilities = []
+    for k in range(1,length+1):
+        probabilities.append([np.sum(utilities_dict[k][j], axis=0) / tot_utility for j in range(len(utilities_dict[1]))])
+
+    return probabilities
+
+a1_cond_probs = calc_probs_a1(df, initial_coeffs, 'A1', 6, 1,2,3, 6,5) # 180 total probs 
+m1_cond_probs = calc_probs_a1(df, initial_coeffs, 'MC1', 6, 2,1,3, 6,5) # 180 total probs
+d1_cond_probs = calc_probs_a1(df, initial_coeffs, 'D1',5 ,3, 1,2, 6,6) # 180 total probs
+
+def calc_log_lik(coeffs):
+    cond_probs_a1 = calc_probs_a1(df, coeffs, 'A1', 6, 1, 2, 3, 6, 5)
+    cond_probs_m1 = calc_probs_a1(df, coeffs, 'MC1', 6, 2, 1, 3, 6, 5)
+    cond_probs_d1 = calc_probs_a1(df, coeffs, 'D1', 5, 3, 2, 1, 6, 6)
+    
+    all_probs = [cond_probs_a1, cond_probs_m1, cond_probs_d1]
+
+    categories = ['A1','MC1','D1']
+    lengths = [6,6,5]
+    total_log_lik = 0
+    
+    log_lik = 0 
+    for i in range(1,lengths[0]+1):
+        log_lik += len(df.loc[df[f'{categories[0]} Choice'] == i]) * np.log(np.sum(all_probs[0][i-1]))
+        log_lik += len(df.loc[df[f'{categories[1]} Choice'] == i]) * np.log(np.sum(all_probs[1][i-1]))
+    for i in range(1,lengths[2]):
+        log_lik += len(df.loc[df[f'{categories[2]} Choice'] == i]) * np.log(np.sum(all_probs[2][i-1]))
+    total_log_lik += log_lik 
+    
+    return total_log_lik
+        
+calc_log_lik(initial_coeffs)
+    
+def objective(initial_coeffs,df):
+    coeffs = get_coeffs(initial_coeffs)
+    log_lik = calc_log_lik(coeffs)
+    print(log_lik)
+    return -log_lik
+
+objective(initial_coeffs, df)
+
+#%%
 # Making function more efficient
 def calc_probs_a1(df, initial_coeffs, name, length, cat, cat_oth, cat_oth1, cat_oth_length,cat_oth1_length):
     
@@ -920,10 +1044,8 @@ initial_coeffs = [0.01] * 170
 log_likelihood = calc_log_lik(initial_coeffs)
     
 def objective(coeffs,df):
-    # Call calc_probs with the dataframe and the current set of coefficients
     log_lik = calc_log_lik(coeffs)
     print(log_lik)
-    # Negate the log-likelihood since we want to maximize it
     return -log_lik
 
 objective(initial_coeffs, df)
@@ -954,7 +1076,9 @@ final_log_lik_4 = result4.fun # 61234.56
 final_mvmnl_coeffs = define_coeffs(result4.x)  
 coeffs_df = pd.DataFrame(list(final_mvmnl_coeffs.items()), columns=['Coeff', 'Value'])
 coeffs_df.to_csv('mvmnl_coeffs.csv',index=True)
+mvmnl_df = pd.read_csv('mvmnl_coeffs.csv')
 
+final_coeffs = define_coeffs(mvmnl_df['Value'])
 #%%
 # calculating choice probs (dont actually need these)
 
@@ -966,10 +1090,8 @@ def calc_choice_probs2(coeffs,df):
     name1 = 'A1'
     name2 = 'MC1'
     name3 = 'D1'
-    # Calculate the denominator (sum of all joint probabilities)
     total_prob = 0.0
 
-    # Iterate through all combinations of choices from each category
     for i in range(6):  # Category 1 has 5 items
         for j in range(6):  # Category 2 has 5 items
             for k in range(5):  # Category 3 has 6 items
@@ -1013,7 +1135,7 @@ def calc_choice_probs2(coeffs,df):
     return choice_probs, baskets
 
 # first utility comes out as 1 because all asc's / betas are set to 0 so exp(utility) = 1, but then other probs are so small
-choice_probs, baskets = calc_choice_probs2(final_mvmnl_coeffs, df)
+choice_probs, baskets = calc_choice_probs2(final_coeffs, df)
 
 #%% 
 # To be used in optimisation 
@@ -1063,6 +1185,13 @@ def get_norm_probs(a1_cond_probs, m1_cond_probs, d1_cond_probs):
                 }
             # so m_prob is p(m=j | a=k, d=i) etc.
     return basket_probabilities
+
+# gives different results because coeffs in different order
+coeffs = list(mvmnl_df['Value'])
+coeffs = get_coeffs(coeffs)
+a1_cond_probs = calc_probs_a1(df, mvmnl_df['Value'], 'A1', 6, 1,2,3, 6,5) # 180 total probs 
+m1_cond_probs = calc_probs_a1(df, mvmnl_df['Value'], 'MC1', 6, 2,1,3, 6,5) # 180 total probs
+d1_cond_probs = calc_probs_a1(df, mvmnl_df['Value'], 'D1',5 ,3, 1,2, 6,6) # 180 total probs
 
 # using result4 (starting values of 0.005) as this gave rise to lowest LL value (least negative)
 a1_cond_probs = calc_probs_a1(df, result4.x, 'A1', 6, 1,2,3, 6,5) # 180 total probs 
@@ -1209,15 +1338,15 @@ dessert1_calories = [540,244,270,215,240]
 dessert1_price = [40,30,20,20]
 dessert1_score = [183.244,69.12,34.4928,156.586]
 dessert1_score = [110.86,183.244, 69.12, 34.4928, 156.586]
-dessert1_names = ['Coconut Custard','KhanomMawKaeng','MangoStickyRice','LodChongThai','KanomKrok']
-dessert1_fat = [float(nutrients.loc[nutrients['Dish names']==dessert1_names[i]]['Fat']) for i in range(len(dessert1_names))]
-sum(dessert1_fat)/4
+dessert1_names = ['CoconutCustard','KhanomMawKaeng','MangoStickyRice','LodChongThai','KanomKrok']
+#dessert1_fat = [float(nutrients.loc[nutrients['Dish names']==dessert1_names[i]]['Fat']) for i in range(len(dessert1_names))]
+#sum(dessert1_fat)/4
 dessert1_fat = [7.375,8.872727272727273, 7.199999999999999, 6.37037037037037, 7.0588235294117645]
-dessert1_protein = [float(nutrients.loc[nutrients['Dish names']==dessert1_names[i]]['Protein']) for i in range(len(dessert1_names))]
-sum(dessert1_protein)/4
+#dessert1_protein = [float(nutrients.loc[nutrients['Dish names']==dessert1_names[i]]['Protein']) for i in range(len(dessert1_names))]
+#sum(dessert1_protein)/4
 dessert1_protein = [2.962,4.4363636363636365,3.0857142857142854,0.7962962962962963,3.5294117647058822]
-dessert1_carbs = [float(nutrients.loc[nutrients['Dish names']==dessert1_names[i]]['Carbs']) for i in range(len(dessert1_names))]
-sum(dessert1_carbs)/4
+#dessert1_carbs = [float(nutrients.loc[nutrients['Dish names']==dessert1_names[i]]['Carbs']) for i in range(len(dessert1_names))]
+#sum(dessert1_carbs)/4
 dessert1_carbs = [42.917,4.4363636363636365,3.0857142857142854,0.7962962962962963,3.5294117647058822]
 
 
@@ -1265,13 +1394,10 @@ main2_fat = [float(nutrients.loc[nutrients['Dish names']==main2_names[i]]['Fat']
 main2_protein = [float(nutrients.loc[nutrients['Dish names']==main2_names[i]]['Protein']) for i in range(len(main2_names))]
 main2_carbs = [float(nutrients.loc[nutrients['Dish names']==main2_names[i]]['Carbs']) for i in range(len(main2_names))]
 def impute_nan_with_average(data_list):
-    # Step 1: Create a new list without 'nan' values
     non_nan_values = [val for val in data_list if not np.isnan(val)]
     
-    # Step 2: Calculate the average of non-'nan' values
     average = np.mean(non_nan_values)
     
-    # Step 3: Replace 'nan' with the average
     imputed_list = [val if not np.isnan(val) else average for val in data_list]
     
     return imputed_list
@@ -1288,6 +1414,7 @@ appetizer1_chol = get_cholesterol(appetizer1_names)
 appetizer2_chol = get_cholesterol(appetizer2_names)
 main1_chol = get_cholesterol(main1_names)
 main2_chol = get_cholesterol(main2_names)
+
 dessert1_chol = get_cholesterol(dessert1_names)
 dessert2_chol = get_cholesterol(dessert2_names)
 
@@ -1378,7 +1505,7 @@ scores_dict= dict(zip(final_scores['dish'], final_scores['total_score']))
 
 #%%
 
-def opt_mvmnl(basket_probs3,max_fat = 200,max_carbs = 1000,max_protein = 400,max_salt = 2000,max_cals = 2000,min_fat = 0,min_carbs = 0,min_protein = 0):
+def opt_mvmnl(basket_probs3,max_fat = 200,max_carbs = 1000,max_protein = 400,max_salt = 2000,max_cals = 2000,min_fat = 0,min_carbs = 0,min_protein = 0, max_occur = 2):
     problem = LpProblem("Basket_Selection",LpMinimize)
     days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
     
@@ -1388,7 +1515,6 @@ def opt_mvmnl(basket_probs3,max_fat = 200,max_carbs = 1000,max_protein = 400,max
         "Dessert": 5
     }
     
-    # Create variables with the desired names
     item_vars = LpVariable.dicts(
         "Item",
         ((day, cat, item) for day in days for cat, num_items in categories.items() for item in range(1, num_items + 1)),
@@ -1406,38 +1532,36 @@ def opt_mvmnl(basket_probs3,max_fat = 200,max_carbs = 1000,max_protein = 400,max
         
     for basket in basket_probs3.keys():
         for day in days:
-            # Initialize the objective value for this offer set and day to zero
             objective_value = 0
             total_fat = 0
             total_protein = 0
             total_carbs = 0
             total_salt = 0
             total_calories = 0
-            # Loop through each item in the offer set
             
             objective_value += arrival_rate * item_vars[(day,'App',basket[0])] * appetizer1_score[basket[0]-1] * basket_probs3[basket]['a_prob']
             objective_value += arrival_rate * item_vars[(day,'Main',basket[1])] * main1_score[basket[1]-1] * basket_probs3[basket]['m_prob']
-            objective_value += arrival_rate * item_vars[(day,'Dessert',basket[2])] * dessert1_score[basket[2]-1] * basket_probs3[basket]['d_prob']
+            objective_value += arrival_rate * item_vars[(day,'Dessert',basket[2])] * dessert2_score[basket[2]-1] * basket_probs3[basket]['d_prob']
             
             total_fat += item_vars[(day,'App',basket[0])] * appetizer1_fat[basket[0]-1]
             total_fat += item_vars[(day,'Main',basket[1])] * main1_fat[basket[1]-1]
-            total_fat += item_vars[(day,'Dessert',basket[2])] * dessert1_fat[basket[2]-1]
+            total_fat += item_vars[(day,'Dessert',basket[2])] * dessert2_fat[basket[2]-1]
             
             total_carbs += item_vars[(day,'App',basket[0])] * appetizer1_carbs[basket[0]-1]
             total_carbs += item_vars[(day,'Main',basket[1])] * main1_carbs[basket[1]-1]
-            total_carbs += item_vars[(day,'Dessert',basket[2])] * dessert1_carbs[basket[2]-1]
+            total_carbs += item_vars[(day,'Dessert',basket[2])] * dessert2_carbs[basket[2]-1]
             
             total_protein += item_vars[(day,'App',basket[0])] * appetizer1_protein[basket[0]-1]
             total_protein += item_vars[(day,'Main',basket[1])] * main1_protein[basket[1]-1]
-            total_protein += item_vars[(day,'Dessert',basket[2])] * dessert1_protein[basket[2]-1]
+            total_protein += item_vars[(day,'Dessert',basket[2])] * dessert2_protein[basket[2]-1]
             
             total_salt += item_vars[(day,'App',basket[0])] * appetizer1_salt[basket[0]-1]
             total_salt += item_vars[(day,'Main',basket[1])] * main1_salt[basket[1]-1]
-            total_salt += item_vars[(day,'Dessert',basket[2])] * dessert1_salt[basket[2]-1]
+            total_salt += item_vars[(day,'Dessert',basket[2])] * dessert2_salt[basket[2]-1]
             
             total_calories += item_vars[(day,'App',basket[0])] * appetizer1_calories[basket[0]-1]
             total_calories += item_vars[(day,'Main',basket[1])] * main1_calories[basket[1]-1]
-            total_calories += item_vars[(day,'Dessert',basket[2])] * dessert1_calories[basket[2]-1]
+            total_calories += item_vars[(day,'Dessert',basket[2])] * dessert2_calories[basket[2]-1]
             
             objective_values.append(objective_value)
     
@@ -1456,15 +1580,13 @@ def opt_mvmnl(basket_probs3,max_fat = 200,max_carbs = 1000,max_protein = 400,max
             
     problem += lpSum(objective_values)
     
-    # Add constraints for each day to select only 1 item from each category
     for day in days:
         for cat, num_items in categories.items():
             problem += lpSum(item_vars[(day, cat, item)] for item in range(1, num_items + 1)) == 1
     
     #item_occurrences = LpVariable.dicts("Item_Occurrence", [(day, cat, item) for day in days for cat,num_items in categories.items() for item in range(1,num_items+1)], cat='Binary')
-    max_item_occurrences = 2
+    max_item_occurrences = max_occur
     
-    # Constraint to ensure that each item is selected at most 'max_item_occurrences' times
     for cat, items in categories.items():
         for item in range(1,items+1):
             problem += lpSum(item_vars[(day, cat, item)] for day in days) <= max_item_occurrences
@@ -1514,7 +1636,41 @@ def opt_mvmnl(basket_probs3,max_fat = 200,max_carbs = 1000,max_protein = 400,max
 
 # lowest values that give feasible solution
 # is it max cals etc for each item or whole basket? Cals need to be at least 950 yet protein can be 50...
-items,item_vars,probem_ = opt_mvmnl(basket_probs3,max_fat=60,max_carbs=90,max_protein=50,max_salt=1300,max_cals=950)
+items,item_vars,probem_ = opt_mvmnl(basket_probs3,max_fat=60,max_carbs=90,max_protein=50,max_salt=1300,max_cals=950) # 6420780
+"""
+Dishes selected for App Mon:
+FishCake
+Dishes selected for Main Mon:
+PadThai
+Dishes selected for Dessert Mon:
+Pudding
+Dishes selected for App Tue:
+FriedCalamari
+Dishes selected for Main Tue:
+GreenChickenCurry
+Dishes selected for Dessert Tue:
+VanillaIceCream
+Dishes selected for App Wed:
+FishCake
+Dishes selected for Main Wed:
+PadKrapow
+Dishes selected for Dessert Wed:
+ApplePie
+Dishes selected for App Thu:
+EggRolls
+Dishes selected for Main Thu:
+GreenChickenCurry
+Dishes selected for Dessert Thu:
+Pudding
+Dishes selected for App Fri:
+FriedCalamari
+Dishes selected for Main Fri:
+PadKrapow
+Dishes selected for Dessert Fri:
+VanillaIceCream
+"""
+items2,item_vars2,problem2 = opt_mvmnl(basket_probs3,max_fat=60,max_carbs=90,max_protein=50,max_salt=1300,max_cals=950,max_occur=3)
+items3,item_vars3,problem3 = opt_mvmnl(basket_probs3,max_fat=100,max_carbs=150,max_protein=100,max_salt=2000,max_cals=1200)
 
 dishes_dict = {
     'Pudding': ('Dessert', 1),
@@ -1544,133 +1700,173 @@ scores_opt_s1 = [15988.18,9882.72,1940.71,7934.20] # scores for each category ov
 (scores_opt_s1[0] + scores_opt_s1[1] + scores_opt_s1[2])/30 # avg score of 745 per item
 11175/15 # avg score of 745 per item (mv mnl)
 
-# Create dictionaries to store the total nutritional values per category
-total_calories_per_cat = {cat: 0 for cat in categories.keys()}
-total_fat_per_cat = {cat: 0 for cat in categories.keys()}
-total_protein_per_cat = {cat: 0 for cat in categories.keys()}
-total_salt_per_cat = {cat: 0 for cat in categories.keys()}
-total_carbs_per_cat = {cat: 0 for cat in categories.keys()}
-total_price_per_cat = {cat: 0 for cat in categories.keys()}
-total_score_per_cat = {cat: 0 for cat in categories.keys()}
-
-# Iterate over the days and categories
-for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']:
-    for cat in categories.keys():
-        print(f"Dishes selected for {cat} {day}:")
-        for dish_name, (dish_cat, dish_item) in dishes_dict.items():
-            if cat == dish_cat:
-                if value(item_vars[(day, dish_cat, dish_item)]) == 1:
-                    print(f"{dish_name}")
-                    
-                    # Retrieve the nutritional information for the dish from the dictionaries
-                    dish_calories = calories_dict[dish_name]
-                    dish_fat = fat_dict[dish_name]
-                    dish_carbs = carbs_dict[dish_name]
-                    dish_protein = protein_dict[dish_name]
-                    dish_salt = salt_dict[dish_name]
-                    dish_score = scores_dict[dish_name]
-                    
-                    # Update the total nutritional values for the category
-                    total_calories_per_cat[cat] += dish_calories
-                    total_fat_per_cat[cat] += dish_fat
-                    total_protein_per_cat[cat] += dish_protein
-                    total_salt_per_cat[cat] += dish_salt
-                    total_carbs_per_cat[cat] += dish_carbs
-                    total_score_per_cat[cat] += dish_score
-
-# Print the total nutritional values per category for the entire week
-print("Total Nutritional Values per Category for the Week:")
-for cat in categories.keys():
-    print(f"{cat}:")
-    print(f"  Total Calories: {total_calories_per_cat[cat]}")
-    print(f"  Total Fat: {total_fat_per_cat[cat]}g")
-    print(f"  Total Protein: {total_protein_per_cat[cat]}g")
-    print(f"  Total Salt: {total_salt_per_cat[cat]}g")
-    print(f"  Total Carbs: {total_carbs_per_cat[cat]}g")
-    print(f"  Total Score: {total_score_per_cat[cat]}")
-    print()
-
-def get_menu(dishes_dict, problem, item_vars, items):
+def get_menu(items,item_vars,problem):
+    categories = {
+        "App": 6,
+        "Main": 6,
+        "Dessert": 5
+    }
+    # Create dictionaries to store the total nutritional values per category
+    total_calories_per_cat = {cat: 0 for cat in categories.keys()}
+    total_fat_per_cat = {cat: 0 for cat in categories.keys()}
+    total_protein_per_cat = {cat: 0 for cat in categories.keys()}
+    total_salt_per_cat = {cat: 0 for cat in categories.keys()}
+    total_carbs_per_cat = {cat: 0 for cat in categories.keys()}
+    total_price_per_cat = {cat: 0 for cat in categories.keys()}
+    total_score_per_cat = {cat: 0 for cat in categories.keys()}
     
-    # Rest of the code remains the same
-    total_calories_week = 0
-    total_fat_week = 0
-    total_protein_week = 0
-    total_salt_week = 0
-    total_carbs_week = 0
-    total_price_week = 0
-    total_score_week = 0
     for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']:
-        print(f"Day: {day}")
-        
-        # Initialize variables to store the total calories for the day
-        total_calories_1 = 0
-        total_fat_1 = 0
-        total_protein_1 = 0
-        total_salt_1 = 0
-        total_carbs_1 = 0
-        total_price_1 = 0
-        total_score_1 = 0
-        
-        # Retrieve the dish name and quantity for each category in the given day
-        for variable in problem.variables():
-            # Check if the variable is selected (has a value greater than 0) and belongs to the given day
-            if variable.varValue > 0 and day in variable.name:
-                dish_name = variable_to_dish[variable.name]
-        
-                # Retrieve the nutritional information for the dish from the dictionaries
-                dish_calories = calories_dict[dish_name]
-                dish_fat = fat_dict[dish_name]
-                dish_carbs = carbs_dict[dish_name]
-                dish_protein = protein_dict[dish_name]
-                dish_salt = salt_dict[dish_name]
-                dish_score = scores_dict[dish_name]
-                
-                if not math.isnan(dish_calories):
-                    total_calories_1 += dish_calories
-                if not math.isnan(dish_fat):
-                    total_fat_1 += dish_fat 
-                if not math.isnan(dish_protein):
-                    total_protein_1 += dish_protein 
-                if not math.isnan(dish_carbs):
-                    total_carbs_1 += dish_carbs 
-                if not math.isnan(dish_salt):
-                    total_salt_1 += dish_salt 
-        
-                if not math.isnan(dish_score):
-                    total_score_1 += dish_score
-        
-                # Print the dish name, quantity, and nutritional information
-                print(f"{dish_name}")
-                print(f"  Calories: {dish_calories}")
-                print(f"  Fat: {dish_fat}g")
-                print(f"  Carbs: {dish_carbs}g")
-                print(f"  Protein: {dish_protein}g")
-                print(f"  Salt: {dish_salt}g")
-        
-        # Add the daily totals to the weekly totals
-        total_calories_week += total_calories_1
-        total_fat_week += total_fat_1
-        total_protein_week += total_protein_1
-        total_salt_week += total_salt_1
-        total_carbs_week += total_carbs_1
-        total_price_week += total_price_1
-        total_score_week += total_score_1
-        
-        # Print the total calories for the day
-        print(f"Total Calories for {day}: {total_calories_1}")
-        print(f"Total Fat for {day}: {total_fat_1}")
-        print(f"Total Protein for {day}: {total_protein_1}")
-        print(f"Total Carbs for {day}: {total_carbs_1}")
-        print(f"Total Salt for {day}: {total_salt_1}")
+        for cat in categories.keys():
+            print(f"Dishes selected for {cat} {day}:")
+            for dish_name, (dish_cat, dish_item) in dishes_dict.items():
+                if cat == dish_cat:
+                    if value(item_vars[(day, dish_cat, dish_item)]) == 1:
+                        print(f"{dish_name}")
+                        
+                        dish_calories = calories_dict[dish_name]
+                        dish_fat = fat_dict[dish_name]
+                        dish_carbs = carbs_dict[dish_name]
+                        dish_protein = protein_dict[dish_name]
+                        dish_salt = salt_dict[dish_name]
+                        dish_score = scores_dict[dish_name]
+                        
+                        total_calories_per_cat[cat] += dish_calories
+                        total_fat_per_cat[cat] += dish_fat
+                        total_protein_per_cat[cat] += dish_protein
+                        total_salt_per_cat[cat] += dish_salt
+                        total_carbs_per_cat[cat] += dish_carbs
+                        total_score_per_cat[cat] += dish_score
+    
+    print("Total Nutritional Values per Category for the Week:")
+    for cat in categories.keys():
+        print(f"{cat}:")
+        print(f"  Total Calories: {total_calories_per_cat[cat]}")
+        print(f"  Total Fat: {total_fat_per_cat[cat]}g")
+        print(f"  Total Protein: {total_protein_per_cat[cat]}g")
+        print(f"  Total Salt: {total_salt_per_cat[cat]}g")
+        print(f"  Total Carbs: {total_carbs_per_cat[cat]}g")
+        print(f"  Total Score: {total_score_per_cat[cat]}")
         print()
+        
+    return total_calories_per_cat, total_fat_per_cat, total_protein_per_cat, total_salt_per_cat, total_carbs_per_cat, total_score_per_cat, total_price_per_cat
 
-    return total_calories_week, total_fat_week, total_protein_week, total_salt_week, total_carbs_week, total_price_week, total_score_week
+total_calories_per_cat, total_fat_per_cat, total_protein_per_cat, total_salt_per_cat, total_carbs_per_cat, total_score_per_cat, total_price_per_cat = get_menu(items, item_vars, probem_)
 
-get_menu(dishes_dict, probem_, item_vars, items)
+def get_optimisation(items,item_vars,problem):
+    total_calories_per_cat, total_fat_per_cat, total_protein_per_cat, total_salt_per_cat, total_carbs_per_cat, total_score_per_cat, total_price_per_cat = get_menu(items, item_vars, probem_)
+
+    opt_app = [total_fat_per_cat['App']*9,total_protein_per_cat['App']*4,total_carbs_per_cat['App']*4]
+    opt_main = [total_fat_per_cat['Main']*9,total_protein_per_cat['Main']*4,total_carbs_per_cat['Main']*4]
+    opt_dess = [total_fat_per_cat['Dessert']*9,total_protein_per_cat['Dessert']*4,total_carbs_per_cat['Dessert']*4]
+
+    optimization = [opt_app, opt_main, opt_dess]
+    
+    opt_score = [total_score_per_cat['App'],total_score_per_cat['Main'],total_score_per_cat['Dessert']]
+    
+    return optimization, opt_score
+
+optimization1_mvmnl, opt1_score = get_optimisation(items, item_vars, probem_) # normal
+optimization2_mvmnl, opt2_score = get_optimisation(items2, item_vars2, problem2) # allowing items to occur three times
+optimization3_mvmnl, opt3_score = get_optimisation(items3, item_vars3, problem3) # relaxed constraints
+
+opt1_score
+opt3_score
+opt2_score
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Set the bar width
+bar_width = 0.25
+
+# Calculate the positions for the bars
+bar_positions = np.arange(3)
+
+# Create the bar plots for each optimization
+bar1 = ax.bar(bar_positions, opt1_score, bar_width, label='Optimization 1', color='skyblue')
+bar2 = ax.bar(bar_positions + bar_width, opt2_score, bar_width, label='Optimization 2', color='lightgreen')
+bar3 = ax.bar(bar_positions + bar_width*2, opt3_score, bar_width, label='Optimization 3', color='purple')
+
+# Set labels and title
+ax.set_xlabel('Categories')
+ax.set_ylabel('Total Score by Category')
+ax.set_title('Scores by Category - MVMNL')
+ax.set_xticks(bar_positions + bar_width)
+ax.set_xticklabels(['App','Main','Dessert'])
+ax.legend()
+
+plt.tight_layout()
+plt.savefig('opts_mvmnl.pdf',bbox_inches='tight',format='pdf')
+plt.show()
 
 #%%
 
+categories = ['Fat', 'Protein', 'Carbs']
+num_categories = len(categories)
+dish_categories = ['Appetizer','Main','Dessert']
+
+# Create subplots for each dish category
+fig, axes = plt.subplots(nrows=1, ncols=len(optimization1), figsize=(15, 6))
+
+# Loop through each dish category and create radar charts
+for i, opt1_data in enumerate(optimization1):
+    ax = axes[i]
+
+    # Compute angles for each category
+    angles = np.linspace(0, 2 * np.pi, num_categories, endpoint=False)
+
+    # Extract data for the current dish category and optimization
+    data_opt1 = np.array(opt1_data) / sum(optimization1[i])
+    data_opt2 = np.array(optimization2[i]) / sum(optimization2[i])
+    data_opt3 = np.array(optimization3[i]) / sum(optimization3[i])
+   # data_opt4 = np.array(optimization4[i]) / sum(optimization4[i])
+
+    # Add the data to the radar chart
+    ax.plot(angles, data_opt1, label='Optimization 1')
+    ax.plot(angles, data_opt2, label='Optimization 2')
+    ax.plot(angles, data_opt3, label='Optimization 3')
+   # ax.plot(angles, data_opt4, label='Optimization 4')
+
+    # Fill the area under the lines
+    ax.fill(angles, data_opt1, alpha=0.25)
+    ax.fill(angles, data_opt2, alpha=0.25)
+    ax.fill(angles, data_opt3, alpha=0.25)
+   # ax.fill(angles, data_opt4, alpha=0.25)
+
+    # Set the labels for each axis
+    ax.set_xticks(angles)
+    ax.set_xticklabels(categories)
+    ax.set_title(dish_categories[i])  # Set subplot title
+    ax.legend()
+
+# Adjust layout
+plt.tight_layout()
+plt.savefig('radar_mvmnl.pdf', bbox_inches='tight',format='pdf')
+plt.show()
+
+results = []
+for i in range(5,400,5):
+    result, item_vars, problem = opt_mvmnl(basket_probs3,max_fat=60+i,max_carbs=90+i,max_protein=50+i,max_salt=1300+i,max_cals=950+i)
+    objective_value = value(problem.objective)
+    results.append((result, item_vars, problem, objective_value))
+    
+for idx, (result, item_vars, problem, objective_value) in enumerate(results):
+    print(f"Solution {idx+1}: Objective Value = {objective_value}")
+
+objective_values = [objective_value for _, _, _, objective_value in results]
+obj_vals_mvmnl = [objective_value for _, _, _, objective_value in results]
+
+plt.figure(figsize=(10, 6))
+plt.plot(objective_values)
+
+plt.title('Objective Value vs. Constraint Values')
+plt.xlabel('Iteration')
+plt.ylabel('Objective Value')
+plt.grid(True)
+plt.savefig('obj-vals-mvmnl.pdf', bbox_inches='tight',format='pdf')
+plt.show()
+
+#%%
+"""
 plt.rcParams['font.sans-serif'] = "Georgia"
 plt.rcParams['font.family'] = "sans-serif"
 plt.rcParams['axes.spines.right'] = False
@@ -1752,3 +1948,4 @@ ax.legend()
 plt.savefig("score_comparison_mvmnl.pdf", bbox_inches='tight', format='pdf')
 plt.tight_layout()
 plt.show()
+"""
