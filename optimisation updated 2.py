@@ -34,18 +34,14 @@ import math
 from pulp import LpConstraintLE, LpConstraintGE, LpConstraintEQ, LpConstraint
 from pulp import value 
 
-# Get a list of all CSV files in the directory
 csv_files = glob.glob('menu*.csv')
 
-# Create an empty list to store dataframes
 dfs = []
 
-# Iterate over each CSV file and read it into a dataframe
 for file in csv_files:
     df = pd.read_csv(file)
     dfs.append(df)
 
-# Concatenate all dataframes into a single dataframe
 combined_df = pd.concat(dfs, ignore_index=True)
 df = combined_df
 
@@ -57,7 +53,6 @@ df[['Soup', 'S Price', 'S Rating', 'S Calories', 'S Discount']] = df['Soup'].str
 df[['Dessert 1', 'D1 Price', 'D1 Rating', 'D1 Calories', 'D1 Discount']] = df['Dessert1'].str.extract(r'([^()]+)\s*\(([^,]+),([^,]+),([^,]+),([^)]+)\)')
 df[['Dessert 2', 'D2 Price', 'D2 Rating', 'D2 Calories', 'D2 Discount']] = df['Dessert2'].str.extract(r'([^()]+)\s*\(([^,]+),([^,]+),([^,]+),([^)]+)\)')
 
-# Drop the original column
 df.drop(columns=['Appertizer1'], inplace=True)
 df.drop(columns=['Appetizer2'], inplace=True)
 df.drop(columns=['MainCourse1'], inplace=True)
@@ -126,7 +121,6 @@ main1_dishes = {
     'GreenChickenCurry': 4,
     'ShrimpStickyRice': 5,
     'ShrimpFriedRice':6
-    # Add more mappings for other main course choices
 }
 
 main2_dishes = {
@@ -251,13 +245,10 @@ main2_fat = [float(nutrients.loc[nutrients['Dish names']==main2_names[i]]['Fat']
 main2_protein = [float(nutrients.loc[nutrients['Dish names']==main2_names[i]]['Protein']) for i in range(len(main2_names))]
 main2_carbs = [float(nutrients.loc[nutrients['Dish names']==main2_names[i]]['Carbs']) for i in range(len(main2_names))]
 def impute_nan_with_average(data_list):
-    # Step 1: Create a new list without 'nan' values
     non_nan_values = [val for val in data_list if not np.isnan(val)]
     
-    # Step 2: Calculate the average of non-'nan' values
     average = np.mean(non_nan_values)
     
-    # Step 3: Replace 'nan' with the average
     imputed_list = [val if not np.isnan(val) else average for val in data_list]
     
     return imputed_list
@@ -493,18 +484,13 @@ def get_cond_probs(df,coeffs,name,length,df2,coeffs2,name2,length2):
     
     num_items = len(utility_values)
     
-    # Dictionary to store conditional probabilities for each set
     conditional_probs_dict = {}
     
-    # Calculate conditional probabilities for each possible set of 2 items
     for set_S in itertools.combinations(range(1, num_items + 1), 2):
-        # Step 1: Calculate the sum of exponential utility values for the alternatives in set S
         sum_utility_set_S = np.sum([utility_values[i - 1] for i in set_S])
     
-        # Step 2: Calculate the conditional probabilities P(i|set S) for each alternative i in set S
         conditional_probs = {i: utility_values[i - 1] / sum_utility_set_S for i in set_S}
     
-        # Add the conditional probabilities to the dictionary
         conditional_probs_dict[set_S] = conditional_probs
         
     return conditional_probs_dict
@@ -550,13 +536,10 @@ cond_probs_s = {}
 
 # Calculate conditional probabilities for each possible set of 2 items
 for set_S in itertools.combinations(range(1, num_items + 1), 2):
-    # Step 1: Calculate the sum of exponential utility values for the alternatives in set S
     sum_utility_set_S = np.sum([utility_values[i - 1] for i in set_S])
 
-    # Step 2: Calculate the conditional probabilities P(i|set S) for each alternative i in set S
     conditional_probs = {i: utility_values[i - 1] / sum_utility_set_S for i in set_S}
 
-    # Add the conditional probabilities to the dictionary
     cond_probs_s[set_S] = conditional_probs
     
 total_s_scores = impute_nan_with_average(soup_score)
@@ -586,23 +569,19 @@ def opt_menu(total_a_calories,total_a_scores,total_a_carbs,total_a_protein,total
     
     for set_S in conditional_probs_dict.keys():
         for day in days:
-            # Initialize the objective value for this offer set and day to zero
             objective_value = 0
             total_fat = 0
             total_protein = 0
             total_carbs = 0
             total_salt = 0
             total_calories = 0
-            # Loop through each item in the offer set
             for item in set_S:
-                # Add the contribution of each item in the offer set to the objective value
                 objective_value += arrival_rate * item_vars[(day, item)] * conditional_probs_dict[set_S][item] * total_a_scores[item - 1]
                 total_fat += item_vars[(day, item)] * total_a_fat[item - 1]
                 total_carbs += item_vars[(day, item)] * total_a_carbs[item - 1]
                 total_protein += item_vars[(day, item)] * total_a_protein[item - 1]
                 total_salt += item_vars[(day, item)] * total_a_salt[item - 1]
                 total_calories += item_vars[(day, item)] * total_a_calories[item - 1]
-            # Append the objective value for this offer set and day to the list
             objective_values.append(objective_value)
     
             fat_constraints.append(LpConstraint(total_fat, sense=LpConstraintLE, rhs=max_fat))
@@ -620,7 +599,6 @@ def opt_menu(total_a_calories,total_a_scores,total_a_carbs,total_a_protein,total
     
     problem += lpSum(objective_values)
     
-    # Add constraints for each day to select only 2 items
     for day in days:
         problem += lpSum(item_vars[(day, item)] for item in range(1, len(total_a_scores) + 1)) == 2
     
@@ -789,26 +767,21 @@ def get_menu(dishes_dict,problem,item_vars,items):
                     
     variable_to_dish = {}
 
-    # Iterate over the days
     for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']:
         # Iterate over the categories
             # Get the dish dictionary for the category
         dish_dict = dishes_dict
 
-            # Iterate over the items in the dish dictionary
         for j, dish_name in enumerate(dish_dict.keys()):
-            # Map the variable x[day][category][j] to the dish name
             variable_to_dish[item_vars[(day,j+1)].name] = dish_name
 
     # Print the mapping
     #for variable, dish_name in variable_to_dish.items():
      #   print(variable, '->', dish_name)
                 
-    # Print the menu for each day
     for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']:
         print(f"Day: {day}")
 
-        # Initialize variables to store the total calories for the day
         total_calories_1 = 0
         total_fat_1 = 0
         total_protein_1 = 0
@@ -817,13 +790,10 @@ def get_menu(dishes_dict,problem,item_vars,items):
         total_price_1 = 0
         total_score_1 = 0
 
-            # Retrieve the dish name and quantity for each category in the given day
         for variable in problem.variables():
-            # Check if the variable is selected (has a value greater than 0) and belongs to the given day and category
             if variable.varValue > 0 and variable.name in variable_to_dish and day in variable.name:
                 dish_name = variable_to_dish[variable.name]
 
-                # Retrieve the nutritional information for the dish from the dictionaries
                 dish_calories = calories_dict[dish_name]
                 dish_fat = fat_dict[dish_name]
                 dish_carbs = carbs_dict[dish_name]
@@ -833,7 +803,6 @@ def get_menu(dishes_dict,problem,item_vars,items):
                 dish_price = price_dict[dish_name]
                 dish_score = scores_dict[dish_name]
 
-                # Calculate the total calories for the day
                 if math.isnan(dish_calories) == False:
                     total_calories_1 += dish_calories
                 if math.isnan(dish_fat) == False:
@@ -849,14 +818,12 @@ def get_menu(dishes_dict,problem,item_vars,items):
                 if math.isnan(dish_score) == False:
                     total_score_1 += dish_score
 
-                # Print the dish name, quantity, and nutritional information
                 print(f"{dish_name}")
                 print(f"  Calories: {dish_calories}")
                 print(f"  Fat: {dish_fat}g")
                 print(f"  Carbs: {dish_carbs}g")
                 print(f"  Protein: {dish_protein}g")
                 print(f"  Salt: {dish_salt}g")
-               # print(f"  Saturated Fat: {dish_sat}g")
                
         total_calories_week += total_calories_1
         total_fat_week += total_fat_1
@@ -866,7 +833,6 @@ def get_menu(dishes_dict,problem,item_vars,items):
         total_price_week += total_price_1
         total_score_week += total_score_1
 
-        # Print the total calories for the day
         print(f"Total Calories for {day}: {total_calories_1}")
         print(f"Total Fat for {day}: {total_fat_1}")
         print(f"Total Protein for {day}: {total_protein_1}")
@@ -911,7 +877,6 @@ soup = [2194, 77.7*9, 117.36*4, 152.3*4, 7902.83]
 
 categories = ['Appetizers', 'Mains', 'Desserts', 'Soup']
 
-# Create a horizontal bar plot
 plt.figure(figsize=(10, 6))
 plt.barh(categories, objective_values_new, color='skyblue')
 plt.xlabel('Objective Value')
@@ -933,15 +898,12 @@ plt.show()
 
 ####
 
-# Define the nutrient categories and their corresponding values - relaxed constraints
 nutrients = ['Calories (kcal)', 'Fat (g)', 'Protein (g)', 'Carbs (g)', 'Salt (g)']
 appetizers = [2192, 102.5*9, 92.72*4, 236.5*4, 6536.98]
 mains = [2814, 159.17*9, 141.71*4, 229.7*4, 6337.1]
 desserts = [2780,131.33*9,31.73*4,392.82*4,860.87]
 soup = [2194, 77.7*9, 117.36*4, 152.3*4, 7902.83]
 
-
-# Create a bar chart
 
 color_palette = sns.color_palette("Set2")  # You can choose a different palette
 
@@ -950,7 +912,6 @@ fig, ax = plt.subplots(figsize=(10, 6))
 width = 0.15
 x = range(len(nutrients))
 
-# Specify colors for each category using the color palette
 ax.bar([val - width*2 for val in x], appetizers, width, label='Appetizers', color=color_palette[0])
 ax.bar([val - width for val in x], mains, width, label='Mains', color=color_palette[1])
 ax.bar(x, desserts, width, label='Desserts', color=color_palette[2])
@@ -966,7 +927,6 @@ plt.tight_layout()
 plt.show()
 #####
 
-# Calculate the total values of fat, protein, and carbs for each category
 total_fat_appetizers = appetizers[1]
 total_protein_appetizers = appetizers[2]
 total_carbs_appetizers = appetizers[3]
@@ -983,7 +943,6 @@ total_fat_soup = soup[1]
 total_protein_soup = soup[2]
 total_carbs_soup = soup[3]
 
-# Create subplots for each category
 fig, axs = plt.subplots(2, 2, figsize=(10, 8))
 fig.suptitle('Proportions of Total Calories by Fat, Protein, and Carbs')
 labels = ['Fat', 'Protein', 'Carbs']
@@ -1035,23 +994,19 @@ def opt_menu_price(total_a_price,total_a_calories,total_a_scores,total_a_carbs,t
     
     for set_S in conditional_probs_dict.keys():
         for day in days:
-            # Initialize the objective value for this offer set and day to zero
             objective_value = 0
             total_fat = 0
             total_protein = 0
             total_carbs = 0
             total_salt = 0
             total_calories = 0
-            # Loop through each item in the offer set
             for item in set_S:
-                # Add the contribution of each item in the offer set to the objective value
                 objective_value += arrival_rate * item_vars[(day, item)] * conditional_probs_dict[set_S][item] * total_a_price[item - 1]
                 total_fat += item_vars[(day, item)] * total_a_fat[item - 1]
                 total_carbs += item_vars[(day, item)] * total_a_carbs[item - 1]
                 total_protein += item_vars[(day, item)] * total_a_protein[item - 1]
                 total_salt += item_vars[(day, item)] * total_a_salt[item - 1]
                 total_calories += item_vars[(day, item)] * total_a_calories[item - 1]
-            # Append the objective value for this offer set and day to the list
             objective_values.append(objective_value)
     
             fat_constraints.append(LpConstraint(total_fat, sense=LpConstraintLE, rhs=max_fat))
@@ -1069,7 +1024,6 @@ def opt_menu_price(total_a_price,total_a_calories,total_a_scores,total_a_carbs,t
     
     problem += lpSum(objective_values)
     
-    # Add constraints for each day to select only 2 items
     for day in days:
         problem += lpSum(item_vars[(day, item)] for item in range(1, len(total_a_scores) + 1)) == 2
     
